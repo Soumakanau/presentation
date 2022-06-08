@@ -1,21 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 3f;
-    Rigidbody2D rb;
-    public Transform attackPoint;
-    public float attackRadius;
-    public LayerMask enemyLayer;
-    Animator playerAnima;
-    public int at = 1;
+    public int maxHp = 3;
     public int hp = 3;
+    public int at = 1;
+    public float speed = 3f;
+    public float attackRadius;
+    public Transform attackPoint;
+    public LayerMask enemyLayer;
+    public Slider hpBar = default;
+    Rigidbody2D rb;
+    Animator playerAnima;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerAnima = GetComponent<Animator>();
+        hp = maxHp;
+        hpBar.maxValue = maxHp;
+        hpBar.value = hp;
     }
 
     void Update()
@@ -25,6 +31,7 @@ public class PlayerController : MonoBehaviour
             Attack();
         }
         Movement();
+        Debug.Log(hp);
     }
     void Attack()
     {
@@ -63,8 +70,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnDamage(int damage)
     {
-        Debug.Log("point");
         hp -= damage;
+        hpBar.value = hp;
         playerAnima.SetTrigger("IsHurt");
         if (hp <= 0)
         {

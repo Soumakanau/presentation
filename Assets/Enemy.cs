@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int at = 1;
+    public int attack = 1;
     public int hp = 3;
     public float attackRadius = 2;
+    public float AttackTime;
     public Transform attackCenter = default;
     public Transform playerPos;
+    public PlayerController player = default;
+
     Animator enemyAnime;
+    float CountTime;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,20 +24,22 @@ public class Enemy : MonoBehaviour
     void Update()
     {
 
-        if (Diff().x < 10)
-        {
-            Attack();//Enemy‚ÆPlayer‚ÌXŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
+        //if (Diff().x < 10)
+        //{
+        //    //Enemy‚ÆPlayer‚ÌXŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
+        //}
+        //if (Diff().y < 10)
+        //{
+        //    //Enemy‚ÆPlayer‚ÌYŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
 
+        //}
+
+        if (Diff().x < 3 && Diff().y < 3)
+        {
+            enemyAnime.SetTrigger("IsAttack");
         }
-        /*if (Diff().y < 10)
-        {
-            //Enemy‚ÆPlayer‚ÌYŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
 
-        }
-        if (Diff().x < 10 && Diff().y < 10)
-        {
-
-        }*/
+        CountTime += Time.deltaTime;
     }
 
     Vector2 Diff()
@@ -47,7 +53,6 @@ public class Enemy : MonoBehaviour
 
     public void OnDamage(int damage)
     {
-        Debug.Log("point");
         hp -= damage;
         enemyAnime.SetTrigger("IsHurt");
         if (hp <= 0)
@@ -63,16 +68,17 @@ public class Enemy : MonoBehaviour
     }
     void Attack()
     {
-        
+
         var col = Physics2D.OverlapCircleAll(attackCenter.position, attackRadius);
         foreach (var c in col)
         {
             PlayerController player = c.gameObject.GetComponent<PlayerController>();
-            if (player)
+            if (player && AttackTime < CountTime)
             {
-                enemyAnime.SetTrigger("IsAttack");
                 Debug.Log(c.gameObject.name + "‚ÉUŒ‚");
-            }    
+                player.OnDamage(attack);
+                CountTime = 0;
+            }
         }
     }
     private void OnDrawGizmosSelected()
