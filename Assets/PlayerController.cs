@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public int maxHp = 3;
-    public int hp = 3;
+    public int maxHp = 5;
+    public int hp = 5;
     public int at = 1;
     public float speed = 3f;
     public float attackRadius;
@@ -26,12 +26,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Attack();
+        if (hp >= 1) {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Attack();
+            }
+            Movement();
         }
-        Movement();
-        Debug.Log(hp);
     }
     void Attack()
     {
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
+        playerAnima.SetFloat("Speed",Mathf.Abs(x));
         rb.velocity = new Vector2(x * speed, rb.velocity.y);
     }
 
@@ -83,5 +85,6 @@ public class PlayerController : MonoBehaviour
     {
         hp = 0;
         playerAnima.SetTrigger("IsDie");
+
     }
 }

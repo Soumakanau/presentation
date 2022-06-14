@@ -11,36 +11,89 @@ public class Enemy : MonoBehaviour
     public Transform attackCenter = default;
     public Transform playerPos;
     public PlayerController player = default;
+    public GameObject Player;
+    public GameObject Enemy1;
+    
+    // public float speed = 0.3f;
+    Rigidbody2D rb;
+    /*Transform Target;
+    GameObject Player;
+    [SerializeField] float MoveSpeed = 2f;
+    [SerializeField] int DetecDist = 8;
+    [SerializeField] bool InArea = false;*/
+
+
 
     Animator enemyAnime;
     float CountTime;
     // Start is called before the first frame update
     void Start()
     {
-        enemyAnime = GetComponent<Animator>();
+        /*Player = GameObject.FindWithTag("Player");
+        Target = Player.transform;*/
+        rb = GetComponent<Rigidbody2D>();
+        enemyAnime = this.gameObject.GetComponent<Animator>();
     }
+
+
+
 
     // Update is called once per frame
     void Update()
     {
+        //move();
+        /*if (InArea)
+        {
+            this.transform.LookAt(Target.transform);
+
+            Vector2 direction = Target.position - this.transform.position;
+            direction = direction.normalized;
+
+            Vector2 velocity = direction * MoveSpeed;
+        }*/
 
         //if (Diff().x < 10)
         //{
-        //    //Enemy‚ÆPlayer‚ÌXŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
+        //Enemy‚ÆPlayer‚ÌXŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
         //}
         //if (Diff().y < 10)
         //{
         //    //Enemy‚ÆPlayer‚ÌYŽ²‚Ì‹——£‚Ì·‚ª10‚æ‚è¬‚³‚­‚È‚Á‚½ê‡‚Ìˆ—‚ð‚±‚±‚É‘‚­
 
         //}
+        Vector2 posA = Player.transform.position;
+        Vector2 posB = Enemy1.transform.position;
+        float dis = Vector2.Distance(posA,posB);
+        
+        if (dis < 2 )
+        {
+            Vector2 force = new Vector2(-1, 0);
+            rb.AddForce(force);
+        }
+        else if (dis > 2)
+        {
+            Vector2 force = new Vector2(0, 0);
+        }
+       
 
-        if (Diff().x < 3 && Diff().y < 3)
+
+
+
+
+
+        
+        if (Diff().x < 1 && Diff().y < 1)
         {
             enemyAnime.SetTrigger("IsAttack");
         }
 
         CountTime += Time.deltaTime;
     }
+
+    /*private void OnTriggerEnter2D(Collider2D collision)
+    {
+        InArea = false;
+    }*/
 
     Vector2 Diff()
     {
@@ -65,6 +118,7 @@ public class Enemy : MonoBehaviour
     {
         hp = 0;
         enemyAnime.SetTrigger("IsDie");
+        Destroy(this.gameObject, 1.5f);
     }
     void Attack()
     {
@@ -87,4 +141,19 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(attackCenter.position, attackRadius);
     }
 
+    
+
+
+    /*private void move()
+    {
+        rb.velocity = new Vector2(speed, rb.velocity.y);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if ("Enemy" == collision.gameObject.tag)
+        {
+            speed = speed * 3;
+        }
+    }*/
 }
